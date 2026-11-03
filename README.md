@@ -1,7 +1,7 @@
 # Comparing Correlations Between Cranial and Facial Measurements
 
 [View analysis](https://aneta-min.github.io/one-sample-correlation/) |
-[View source code](https://github.com/aneta-min/roll-call-analysis)
+[View source code](https://github.com/aneta-min/one-sample-correlation/blob/main/projekt_visual.qmd)
 
 ## Overview
 
