@@ -1,40 +1,54 @@
-Comparing Correlations Between Cranial and Facial Measurements
-Overview
-This project investigates whether the correlation between maximum cranial height (skull_pH) and morphological facial height (face_H) differs between male and female individuals.
+# Comparing Correlations Between Cranial and Facial Measurements
 
-The analysis uses one-sample-correlation-skull-mf.txt and compares the sex-specific correlation coefficients.
-Research question
-Is the correlation between maximum cranial height and morphological facial height among men different from the corresponding correlation among women?
-Variables
-Variable	Description	Unit
-skull_pH	Maximum cranial height	mm
-face_H	Morphological facial height	mm
-Sex	Grouping variable (male/female)	—
+## Overview
 
+This project investigates whether the correlation between maximum cranial height (`skull_pH`) and morphological facial height (`face_H`) differs between male and female individuals.
 
-Statistical methodology
-The analysis is planned in the following stages:
-1. Exploratory analysis of both variables in the male and female samples.
-2. Assessment of bivariate normality in each sample using Mardia’s test.
-3. Comparison of the male and female correlation coefficients.
-4. Reporting the hypothesis test using:
+The analysis uses the dataset `one-sample-correlation-skull-mf.txt` and compares the sex-specific correlation coefficients.
+
+## Research Question
+
+Does the correlation between maximum cranial height and morphological facial height among men differ from the corresponding correlation among women?
+
+## Variables
+
+| Variable | Description | Unit |
+|---|---|---|
+| `skull_pH` | Maximum cranial height | mm |
+| `face_H` | Morphological facial height | mm |
+
+## Statistical Methods
+
+The analysis consists of the following steps:
+
+1. Exploratory analysis of both variables in male and female samples.
+2. Assessment of bivariate normality using Mardia’s test.
+3. Comparison of the correlation coefficients between the two groups.
+4. Hypothesis testing using:
    - the critical region;
-   - a confidence interval (Wald case only);
+   - a confidence interval in the Wald case;
    - p-values based on the specified test statistics.
-The significance level and exact test-statistic variants should be specified in the analysis document.
-Data
-Dataset: one-sample-correlation-skull-mf.txt
 
-Please check the original data source and license before redistributing the dataset. If redistribution is not permitted, provide instructions for obtaining it instead of uploading the raw data.
-Repository contents
-- README.md — project overview and methodology.
-- index.html — GitHub Pages landing page.
-- one-sample-correlation-skull-mf.txt — dataset, if redistribution is permitted.
-- Analysis source/output files — add the relevant .qmd, .R, or rendered HTML files.
-Reproducibility
-The analysis is intended to be reproducible in R. To reproduce the results, obtain the dataset, open the source analysis file, and run its code.
+## Data
 
-Add package requirements and execution instructions once they are finalized.
-Author
-Aneta Minibergerová
+The analysis uses the dataset:
+
+`one-sample-correlation-skull-mf.txt`
+
+The dataset should only be redistributed if its original source and license permit it.
+
+## Tools
+
+- R
+- Quarto
+- Statistical hypothesis testing
+- Multivariate normality testing
+
+## Reproducibility
+
+The analysis can be reproduced using the original Quarto source file and the dataset.
+
+## Author
+
+Aneta Minibergerová  
 Applied Mathematics, Masaryk University
