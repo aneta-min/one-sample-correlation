@@ -50,5 +50,5 @@ The analysis can be reproduced using the original Quarto source file and the dat
 
 ## Author
 
-Aneta Minibergerová  
+Aneta Miniberger, Kateřina Válková
 Applied Mathematics, Masaryk University
