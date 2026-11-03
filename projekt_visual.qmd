@@ -1,0 +1,829 @@
+---
+title: "Projekt č. 1"
+subtitle: "M8986 - Statistická inference II"
+author: "Aneta Miniberger, Kateřina Válková"
+format:
+  html:
+    css: styles.css
+    code-summary: "Zobrazení kódu"
+    theme: minty
+    toc: true
+    toc-location: left
+    toc-depth: 2
+    toc-title: Obsah
+    code-tools: true
+    embed-resources: true  # Embed fonts, images, and other resources
+    fig: Obrázek # Changes "Figure" to "Obrázek"
+    fig-tab: Obrázek # Use this for tables or images labeled as "Figure"
+execute: 
+  echo: false
+  warning: false
+  message: false
+---
+
+# Příklad č. 1: Pravděpodobnost pokrytí zpětně transformovaných DIS
+
+::: custom-rectangle
+### Zadání {#zadani1}
+
+Nech $X_i \sim \mathrm{Bin}(N, p_i)$, kde $p_i \in \{0.001, 0.003, \dots, 0.997, 0.999\}$. 
+
+Vypočítajte pravdepodobnosti pokrytia $95\% \ DIS$ (dvojstranných intervalov spoľahlivosti) pre transformáciu $g(p_i)$ s hranicami $(dh_g(p_i), hh_g(p_i))$ a pravdepodobnosti pokrytia spätne transformovaného $95\% \ DIS$ pre $p_i$ s hranicami $\left( \left(dh(p_i)\right)^{-1}, \left(hh(p_i)\right)^{-1} \right),$ kde:
+
+- a. $g(p_i) = \dfrac{p_i}{1 - p_i}$,
+- b. $g(p_i) = \ln \left( \dfrac{p_i}{1 - p_i} \right)$,
+- c. $g(p_i) = \arcsin(\sqrt{p_i}) \) pre každé \( p_i$.
+
+Nakreslite obrázok, kde na osi $x$ budú pravdepodobnosti $p_i$ a na osi $y$ bude pravdepodobnosť pokrytia $\Pr_i(\text{pokrytie})$. 
+
+Zvoľte:  
+(i) $N = 30$,  
+(ii) $N = 100$,  
+(iii) $N = 500$.
+
+:::
+
+## Odvození tvaru zpětně transformovaných hranic DIS
+
+### a) transformace $g(p_i) = \frac{p_i}{1 - p_i}$
+
+$95 \% \ DIS$ pro transformaci $g(p_i)$ bude mít obecně následující tvar
+
+$$
+\left(
+g\left(\widehat{p_i}\right) - u_{\alpha/2} \sqrt{\widehat{\operatorname{Var}\left(g\left(p_i\right)\right)}},
+\quad
+g\left(\widehat{p_i}\right) + u_{\alpha/2} \sqrt{\widehat{\operatorname{Var}\left(g\left(p_i\right)\right)}}
+\right).
+$$
+
+Bylo proto nejdříve nutné na základě delta metody odvodit tvar rozptylu pro danou transformaci.
+
+::: {#deltametoda .zadani-rectangle}
+### Delta metoda
+
+$$
+\widehat{\operatorname{Var}\left( g\left( \widehat{\theta} \right) \right)}
+= \left( \left. \frac{d}{d\theta} g(\theta) \right|_{\theta = \widehat{\theta}} \right)^2 Var(\widehat{\theta})
+$$
+:::
+
+Tedy pro parametr $p_i$ a transformaci $g(p_i) = \frac{p_i}{1 - p_i}$ platí
+
+$$
+g'(p_i) = \frac{(1 - p_i) + p_i}{(1 - p_i)^2} = \frac{1}{(1 - p_i)^2}
+$$
+$$
+\operatorname{Var}(\hat{p_i}) = \frac{\hat{p_i}(1 - \hat{p_i})}{N}
+$$
+$$
+\widehat{\operatorname{Var}(g(\hat{p_i}))} = \frac{1}{(1 - \hat{p_i})^4} \cdot \frac{\hat{p_i}(1 - \hat{p_i})}{N} = \frac{\hat{p_i}}{N(1 - \hat{p_i})^3}.
+$$
+
+$95 \% \ DIS$ pro transformaci je poté tvaru
+
+$$
+(d_g, h_g) = \left(
+\frac{\widehat{p_i}}{1 - \widehat{p_i}} - u_{\alpha/2} \cdot \sqrt{ \frac{\widehat{p_i}}{(1 - \widehat{p_i})^3 N} },
+\quad
+\frac{\widehat{p_i}}{1 - \widehat{p_i}} + u_{\alpha/2} \cdot \sqrt{ \frac{\widehat{p_i}}{(1 - \widehat{p_i})^3 N} }
+\right).
+$$
+Zpětně transformovaný $95 \% \ DIS$ získáme aplikací inverzní transformace na obě hranice intervalu.
+
+$$
+g(p_i) = \frac{p_i}{1 - p_i}
+$$
+
+$$
+(1 - p_i) g(p_i) = p_i
+$$
+
+$$
+g(p_i) - p_i g(p_i) = p_i
+$$
+$$
+g(p_i) = p_i(1 + g(p_i))
+$$
+
+$$
+p_i = \frac{g(p_i)}{1 + g(p_i)}
+$$
+$$
+\Rightarrow \quad \left[dh(p_i) \right]^{-1} = \frac{dh_g(p_i)}{1 + dh_g(p_i)}
+\qquad
+\left[hh(p_i) \right]^{-1} = \frac{hh_g(p_i)}{1 + hh_g(p_i)}
+$$
+
+Po dosazení můžeme zpětně transformované meze vyjádřit jako 
+
+$$
+\left[dh(p_i) \right]^{-1} = \frac{
+\displaystyle \frac{\widehat{p_i}}{1 - \widehat{p_i}} - u_{\alpha/2} \cdot \sqrt{ \frac{\widehat{p_i}}{N(1 - \widehat{p_i})} }
+}{
+\displaystyle 1 + \frac{\widehat{p_i}}{1 - \widehat{p_i}} - u_{\alpha/2} \cdot \sqrt{ \frac{\widehat{p_i}}{N(1 - \widehat{p_i})} }
+},
+\quad
+\left[hh(p_i) \right]^{-1} = \frac{
+\displaystyle \frac{\widehat{p_i}}{1 - \widehat{p_i}} + u_{\alpha/2} \cdot \sqrt{ \frac{\widehat{p_i}}{N( 1 - \widehat{p_i})} }
+}{
+\displaystyle 1 + \frac{\widehat{p_i}}{1 - \widehat{p_i}} + u_{\alpha/2} \cdot \sqrt{ \frac{\widehat{p_i}}{N(1 - \widehat{p_i})} }
+}.
+$$
+Stejným způsobem budeme postupovat u dalších dvou transformací.
+
+### b) transformace $g(p_i) = \ln\left(\frac{p_i}{1 - p_i}\right)$
+
+$$
+g'(p_i) = \frac{1}{p_i (1 - p_i)}
+$$
+
+$$
+\operatorname{Var}(\hat{p_i}) = \frac{\hat{p_i}(1 - \hat{p_i})}{N}
+$$
+Podle delta metody platí:
+$$
+\widehat{\operatorname{Var}(g(\hat{p_i}))} = \frac{1}{\hat{p_i}^2 (1 - \hat{p_i})^2} \cdot \frac{\hat{p_i}(1 - \hat{p_i})}{N} = \frac{1}{\hat{p_i}(1 - \hat{p_i}) N}
+$$
+
+$95\% \ DIS$ pro transformaci je:
+
+$$
+(d_g, h_g) = \left(
+\ln\left(\frac{\widehat{p_i}}{1 - \widehat{p_i}}\right) - u_{\alpha/2} \cdot \sqrt{\frac{1}{\widehat{p_i}(1 - \widehat{p_i}) N}},
+\quad
+\ln\left(\frac{\widehat{p_i}}{1 - \widehat{p_i}}\right) + u_{\alpha/2} \cdot \sqrt{\frac{1}{\widehat{p_i}(1 - \widehat{p_i}) N}}
+\right)
+$$
+
+Zpětná transformace:
+
+$$
+g(p_i) = \ln\left(\frac{p_i}{1 - p_i}\right)
+$$
+$$
+e^{g(p_i)} = \frac{p_i}{1 - p_i}
+$$
+$$
+...
+$$
+
+$$
+p_i = \frac{e^{g(p_i)}}{1 + e^{g(p_i)}}
+$$
+
+Aplikováno na krajní body:
+
+$$
+\left[dh(p_i)\right]^{-1} = \frac{e^{d_g}}{1 + e^{d_g}}
+\qquad
+\left[hh(p_i)\right]^{-1} = \frac{e^{h_g}}{1 + e^{h_g}}
+$$
+Opět bychom mohli dosadit hodnoty $d_g$ a $h_g$ a vyjádřit tak hranice transformovaného intervalu, vzhledem ke složitosti výrazů tento krok vynecháme.
+
+### c) transformace $g(p_i) = \arcsin(\sqrt{p_i})$
+
+$$
+g'(p_i) = \frac{1}{2 \sqrt{p_i(1 - p_i)}}
+$$
+
+$$
+\operatorname{Var}(\hat{p_i}) = \frac{\hat{p_i}(1 - \hat{p_i})}{N}
+$$
+Podle delta metody platí:
+$$
+\widehat{\operatorname{Var}(g(\hat{p_i}))} = \left( \frac{1}{2 \sqrt{\hat{p_i}(1 - \hat{p_i})}} \right)^2 \cdot \frac{\hat{p_i}(1 - \hat{p_i})}{N} = \frac{1}{4N}
+$$
+
+$95\% \ DIS$  pro transformaci:
+
+$$
+(d_g, h_g) = \left(
+\arcsin(\sqrt{\hat{p_i}}) - u_{\alpha/2} \cdot \sqrt{\frac{1}{4N}},
+\quad
+\arcsin(\sqrt{\hat{p_i}}) + u_{\alpha/2} \cdot \sqrt{\frac{1}{4N}}
+\right)
+$$
+
+Zpětná transformace:
+
+$$
+g(p_i) = \arcsin(\sqrt{p_i})
+$$
+$$
+\sin(g(p_i)) = \sqrt{p_i}
+$$
+$$
+\Rightarrow \sin^2(g(p_i)) = p_i
+$$
+
+Aplikováno na krajní body:
+
+$$
+\left[dh(p_i)\right]^{-1} = \sin^2(d_g)
+\qquad
+\left[hh(p_i)\right]^{-1} = \sin^2(h_g)
+$$
+
+
+## Funkce pro výpočet pravděpodobnosti pokrytí $95\% \ DIS$ pro $p_i$
+
+Jakmile máme odvozené tvary zpětně transformovaných intervalů, můžeme přistoupit k samotnému výpočtu pravděpodobnosti pokrytí a následně vykreslení obrázků.
+
+::: {#pstpokryti .zadani-rectangle}
+### Pravděpodobnost pokrytí
+
+$$
+\mathop{\Pr}\nolimits_i(\text{pokrytie}) = \sum_j \Pr(X = N p_j : p_i \in \text{95% DIS pro } p_j),
+$$
+
+$p_j \in M_J = \left\{ \frac{1}{N}, \frac{2}{N}, \dots, 1 - \frac{1}{N} \right\}$
+:::
+
+Pravděpodobnosti pokrytí $95 \% \ DIS$ spočítáme pomocí funkce `PokrytiWSL`, která počítá pravděpodobnost pokrytí pro intervaly Waldova, skóre i věrohodnostního typu. Pro Waldův interval je poté upravena pro výpočet pravděpodobností pokrytí zpětně transformovaných $95 \% \ DIS$ pro uvedené transformace.
+
+```{r}
+#| echo: true
+#| eval: true
+
+
+PokrytiWSL <- function(p, N, alpha = 0.05, type = "wald", transformation = "none"){
+  xj <- 1:(N - 1)
+  pj <- xj / N 
+  u <- qnorm(1 - alpha / 2)
+  
+  if(type == "wald"){
+    
+    if (transformation == "none"){
+      dhj <- pj - u * sqrt(pj * (1 - pj) / N)
+      hhj <- pj + u * sqrt(pj * (1 - pj) / N)
+    }
+    
+    else if (transformation == "odds"){
+      dhg <- (pj / (1 - pj)) - u * sqrt(pj / ((1 - pj)^3 * N))
+      hhg <- (pj / (1 - pj)) + u * sqrt(pj / ((1 - pj)^3 * N))
+      dhj <- dhg / (1 + dhg)
+      hhj <- hhg / (1 + hhg)
+    }
+    
+    else if (transformation == "logodds"){
+      dhg <- log(pj / (1 - pj)) - u * sqrt(1/(pj * (1 - pj) * N))
+      hhg <- log(pj / (1 - pj)) + u * sqrt(1/(pj * (1 - pj) * N))
+      dhj <- exp(dhg) / (1 + exp(dhg)) 
+      hhj <- exp(hhg) / (1 + exp(hhg))
+    }
+    
+    else if (transformation == "arcsinsq"){
+      dhg <- asin(sqrt(pj)) - u * sqrt(1 / (4 * N))
+      hhg <- asin(sqrt(pj)) + u * sqrt(1 / (4 * N))
+      dhj <- sin(dhg)^2
+      hhj <- sin(hhg)^2
+    }
+  }
+
+  if (type == 'score'){
+    u2 <- qnorm(alpha / 2)^2
+    start <- pj * (N / (N + u2)) + 0.5 * (u2 / (N + u2))
+    insidebr <- pj * (1 - pj) * (N / (N + u2)) + 0.25 * u2 / (N + u2)
+    dhj <- start - sqrt(u2) * sqrt((1 / (N + u2)) * insidebr)
+    hhj <- start + sqrt(u2) * sqrt((1 / (N + u2)) * insidebr)
+  }
+  
+  if (type == 'likely'){
+    ULRchisq <- function(x, p, N, alpha = 0.05){
+    uLRchisq <- 2 * (x * log(x / (N * p)) + (N - x) * log((N - x) / (N - N * p))) - qchisq(1 - alpha, 1)
+    return(uLRchisq)
+    }
+    
+  dhj <- hhj <- NULL
+  for (j in 1:length(pj)){
+      dhj[j] <- uniroot(f = ULRchisq, interval = c(1e-6, pj[j]), x = xj[j], N = N, alpha = alpha)$root
+      hhj[j] <- uniroot(f = ULRchisq, interval = c(pj[j], 1 - 1e-6), x = xj[j], N = N, alpha = alpha)$root
+    }
+  }
+  
+  pr_X_Npj <- dbinom(xj, N, p)
+  p_in_ISj <- (p > dhj & p < hhj) * 1 
+  pst_pokryti <- sum(pr_X_Npj * p_in_ISj)
+  return(pst_pokryti)
+}
+```
+
+Pravděpodobnosti pokrytí pro jednotlivé případy dále graficky znázorníme pomocí funkce `PokrytiPlot`.
+
+```{r}
+#| echo: true
+#| eval: true
+
+PokrytiPlot <- function(N, alpha = 0.05, type = "wald", transformation = "none"){
+  pst <- seq(0.001, 0.999, by = 0.002)
+  pokryti <- numeric(length(pst))
+  for (i in 1:length(pst)){
+    pokryti[i] <- PokrytiWSL(p = pst[i], N = N, alpha = alpha, type = type, transformation = transformation)
+  }
+  
+  if (type == 'wald') {text <- bquote(paste('Waldův ', .((1 - alpha) * 100), '% DIS; ', "N =" ,.(N)))}
+  if (type == 'score') {text <- bquote(paste('Skóre ', .((1 - alpha) * 100), '% DIS; ', "N =" ,.(N)))}
+  if (type == 'likely') {text <- bquote(paste('Věrohodnostní ', .((1 - alpha) * 100), '% DIS; ', "N =" ,.(N)))}
+  
+  plot(pst, pokryti, ylim = c(0.6, 1), xlim = c(0,1), xlab = "", ylab = "", col = "#3A7D66", type = "l", lwd = 1.3)
+  mtext("p", side = 1, line = 2, cex = 1.2)
+  mtext(text, side = 1, line = 3.5, cex = 1.2)
+  abline(h = 0.95, col = "grey", lty = "dashed")
+}
+
+
+```
+
+### Vykreslení původních intervalů bez transformací
+
+```{r}
+#| layout-ncol: 3
+#| fig-width: 4
+#| fig-height: 5
+#| out-width: 100%
+#| echo: true
+#| eval: true 
+
+par(mar = c(4.5, 2.5, 2, 1))
+
+# Wald
+
+PokrytiPlot(N = 30, type = 'wald', alpha = 0.05) 
+PokrytiPlot(N = 100, type = 'wald', alpha = 0.05) 
+PokrytiPlot(N = 500, type = 'wald', alpha = 0.05)
+
+
+# Skore
+
+PokrytiPlot(N = 30, type = 'score', alpha = 0.05) 
+PokrytiPlot(N = 100, type = 'score', alpha = 0.05) 
+PokrytiPlot(N = 500, type = 'score', alpha = 0.05)
+
+
+# Verohodnost
+
+PokrytiPlot(N = 30, type = 'likely', alpha = 0.05) 
+PokrytiPlot(N = 100, type = 'likely', alpha = 0.05) 
+PokrytiPlot(N = 500, type = 'likely', alpha = 0.05)
+
+```
+
+### Vykreslení Waldova intervalu po jednotlivých transformacích
+
+```{r}
+#| layout-ncol: 3
+#| fig-width: 4
+#| fig-height: 5
+#| out-width: 100%
+#| echo: true
+#| eval: true
+
+par(mar = c(4.5, 2.5, 2, 1))
+
+# sance
+
+PokrytiPlot(N = 30, type = 'wald', transformation = "odds", alpha = 0.05) 
+PokrytiPlot(N = 100, type = 'wald', transformation = "odds", alpha = 0.05) 
+PokrytiPlot(N = 500, type = 'wald', transformation = "odds", alpha = 0.05)
+
+
+# log sanci
+
+PokrytiPlot(N = 30, type = 'wald', transformation = "logodds", alpha = 0.05) 
+PokrytiPlot(N = 100, type = 'wald', transformation = "logodds", alpha = 0.05) 
+PokrytiPlot(N = 500, type = 'wald', transformation = "logodds", alpha = 0.05)
+
+
+# arcsinus odmocniny
+
+PokrytiPlot(N = 30, type = 'wald', transformation = "arcsinsq", alpha = 0.05) 
+PokrytiPlot(N = 100, type = 'wald', transformation = "arcsinsq", alpha = 0.05) 
+PokrytiPlot(N = 500, type = 'wald', transformation = "arcsinsq", alpha = 0.05)
+
+```
+
+Potom to nějak porovnat, napsat tady ještě nějaký pokec
+
+
+# Příklad č. 2: Dvojvýběrové testy o rovnosti korelačních koeficientů $\rho_1$ a $\rho_2$, silofunkce a minimální rozsah souboru
+
+::: custom-rectangle
+### Zadání {#zadani2}
+
+Majme $H_{01} : \rho_1 - \rho_2 = \rho_0$ oproti alternatívnej hypotéze 
+$H_{11} : \rho_1 - \rho_2 \ne \rho_0$, ktorú testujeme dvojvýberovou $z$-štatistikou $z_W$.
+
+1. Odvoďte silofunkciu 
+$$
+1 - \beta(\xi_1, \xi_2) = 1 - \Phi \left( u_{\alpha/2} - \sqrt{(n - 3)/2} \cdot |\delta_\xi| \right),
+$$
+kde 
+$$
+\xi = \frac{1}{2} \ln \left( \frac{1 + \rho}{1 - \rho} \right), 
+\quad \delta_\xi = \xi_0 - (\xi_1 - \xi_2), 
+\quad n_2 = n_1 = n.
+$$
+
+2. Odvoďte vzorec na výpočet minimálneho rozsahu súboru 
+$$
+n_1 \geq 3 + 2 \left( \frac{u_{\alpha/2} + u_\beta}{\xi_1 - \xi_2 - \xi_0} \right)^2,
+\quad n_2 = k n_1,
+$$
+kde $k$ je alokačný pomer.
+
+:::
+
+## Odvození tvaru silofunkce
+
+$H_{01} : \rho_1 - \rho_2 = \rho_0 \quad H_{11} : \rho_1 - \rho_2 \ne \rho_0$
+
+-   Kritický obor: $W = (-\infty ; u_{\alpha/2}) \cup \langle u_{1-\alpha/2}; \infty)$\
+-   Chyba druhého druhu $\beta_{11} = P(H_0 \text{ nezamítáme} \mid H_0 \text{ neplatí})$\
+-   Síla testu $\beta_{11}^* = 1 - \beta_{11} = P(H_0 \text{ zamítáme} \mid H_0 \text{ neplatí})$\
+-   $\beta_{11}^*(\mu) = \Phi\left( u_{\alpha/2} - \frac{\mu - \mu_0}{\sigma} \sqrt{n} \right) + \Phi\left( u_{\alpha/2} + \frac{\mu - \mu_0}{\sigma} \sqrt{n} \right)$
+-   Testovací statistika $\frac{Z_1 - Z_2 - \xi_0}{\sqrt{\frac{1}{n_1 - 3} + \frac{1}{n_2 - 3}}} \overset{\mathcal{D}}{\sim} N(0,1), Z_j = \frac{1}{2}\ln\frac{1 + R_j}{1 - R_j}, j = 1, 2.$
+-   $\xi_0 = \frac{1}{2}\ln\frac{1 + \rho_0}{1 - \rho_0}$
+
+
+\begin{equation}
+\begin{aligned}
+\beta_{11}^*(\xi_1, \xi_2) 
+&= 1 - \beta_{11}(\xi_1, \xi_2) \\
+&= \Pr\left( \frac{Z_1 - Z_2 - \xi_0}{\sqrt{\frac{1}{n_1 - 3} + \frac{1}{n_2 - 3}}} 
+      \leq u_{\alpha/2} \right) 
+   + \Pr\left( \frac{Z_1 - Z_2 - \xi_0}{\sqrt{\frac{1}{n_1 - 3} + \frac{1}{n_2 - 3}}} 
+      > u_{1 - \alpha/2} \right) \\
+&= \Pr\left( \frac{Z_1 - Z_2 - \xi_0}{\sqrt{\frac{2}{n - 3}}} 
+      \leq u_{\alpha/2} \right) 
+   + \Pr\left( \frac{Z_1 - Z_2 - \xi_0}{\sqrt{\frac{2}{n - 3}}} 
+      > u_{1 - \alpha/2} \right) \\
+&= \Pr\left( \frac{Z_1 - Z_2 
+      \textcolor{#66c2a4}{- (\xi_1 - \xi_2) + (\xi_1 - \xi_2)}
+      - \xi_0}{\sqrt{\frac{2}{n - 3}}} 
+      \leq u_{\alpha/2} \right) \\
+&\quad + \Pr\left( \frac{Z_1 - Z_2 
+      \textcolor{#66c2a4}{- (\xi_1 - \xi_2) + (\xi_1 - \xi_2)}
+      - \xi_0}{\sqrt{\frac{2}{n - 3}}} 
+      > u_{1 - \alpha/2} \right) \\
+&= \Pr\left( 
+      \frac{Z_1 - Z_2 - (\xi_1 - \xi_2)}{\sqrt{\frac{2}{n - 3}}} 
+      + \frac{(\xi_1 - \xi_2) - \xi_0}{\sqrt{\frac{2}{n - 3}}} 
+      \leq u_{\alpha/2} 
+   \right) \\
+&\quad + \Pr\left( 
+      \frac{Z_1 - Z_2 - (\xi_1 - \xi_2)}{\sqrt{\frac{2}{n - 3}}} 
+      + \frac{(\xi_1 - \xi_2) - \xi_0}{\sqrt{\frac{2}{n - 3}}} 
+      > u_{1 - \alpha/2} 
+   \right) \\
+&= \Pr\left( 
+      \frac{Z_1 - Z_2 - (\xi_1 - \xi_2)}{\sqrt{\frac{2}{n - 3}}} 
+      \leq u_{\alpha/2} - \frac{(\xi_1 - \xi_2) - \xi_0}{\sqrt{\frac{2}{n - 3}}} 
+   \right) \\
+&\quad + \Pr\left( 
+      \frac{Z_1 - Z_2 - (\xi_1 - \xi_2)}{\sqrt{\frac{2}{n - 3}}} 
+      > u_{1 - \alpha/2} - \frac{(\xi_1 - \xi_2) - \xi_0}{\sqrt{\frac{2}{n - 3}}} 
+   \right) \\
+&= \Phi\left( 
+      u_{\alpha/2} + \frac{\xi_0 - (\xi_1 - \xi_2)}{\sqrt{\frac{2}{n - 3}}} 
+   \right) 
+   + 1 - \Phi\left( 
+      u_{1 - \alpha/2} + \frac{\xi_0 - (\xi_1 - \xi_2)}{\sqrt{\frac{2}{n - 3}}} 
+   \right) \\
+&= \Phi\left( 
+      u_{\alpha/2} + \delta_\xi \sqrt{(n - 3)/2} 
+   \right) 
+   + 1 - \Phi\left( 
+      u_{1 - \alpha/2} + \delta_\xi \sqrt{(n - 3)/2} 
+   \right) \\
+&= \Phi\left( 
+      u_{\alpha/2} + \delta_\xi \sqrt{(n - 3)/2} 
+   \right) 
+   + \Phi\left( 
+      u_{\alpha/2} - \delta_\xi \sqrt{(n - 3)/2} 
+   \right) \\
+& < \Phi\left( 
+      u_{\alpha/2} + |\delta_\xi| \sqrt{(n - 3)/2} 
+   \right).
+\end{aligned}
+\end{equation}
+Což v notaci kritických hodnot dává aproximovaný tvar silofunkce: 
+
+$$
+\beta^*(\xi_1, \xi_2) = 1 - \Phi\left( 
+      u_{\alpha/2} - |\delta_\xi| \sqrt{(n - 3)/2} 
+   \right).
+$$
+
+
+## Odvození vzorce na výpočet minimálního rozsahu
+
+
+
+Předpokládejme, že $n_2 = k n_1$, kde $k$ je alokační poměr. Pokud je $k \ge 1$, tak platí $$
+\sqrt{\frac{1}{n_1 - 3} + \frac{1}{n_2 - 3}} = \sqrt{\frac{1}{n_1 - 3} + \frac{1}{kn_1 - 3}} \ge \sqrt{\frac{2}{n_1 - 3}}
+$$ Pokud je $k \le 1$, tak je pouze vymění $n_1$ za $n_2$ ve následujícím odvození. $$ 
+\begin{aligned}
+\beta^*_{11} 
+&= \Phi\left( u_{\alpha/2} + \frac{|\delta_\xi|}{\sqrt{\frac{1}{n_1 - 3} + \frac{1}{n_2 - 3}}} \right) \\ 
+u_{\beta^*_{11}} &= u_{\alpha/2} + \frac{|\delta_\xi|}{\sqrt{\frac{1}{n_1 - 3} + \frac{1}{n_2 - 3}}} \\ 
+\frac{u_{\beta^*_{11}} - u_{\alpha/2}}{|\delta_\xi|} &= \frac{1}{\sqrt{\frac{1}{n_1 - 3} + \frac{1}{n_2 - 3}}} \le \sqrt{(n_1- 3)/2} \\ 
+\left(\frac{u_{\beta^*_{11}} - u_{\alpha/2}}{|\delta_\xi|}\right)^2 &\le (n_1- 3)/2 \\ 
+2 \left(\frac{u_{\beta^*_{11}} - u_{\alpha/2}}{|\delta_\xi|}\right)^2 + 3 &\le n_1
+\end{aligned}
+$$
+
+# Příklad č. 3: Test o rozdílu dvou korelačních koeficientů
+
+::: custom-rectangle
+### Zadání {#zadani3}
+
+Majme dátový súbor `one-sample-correlation-skull-mf.txt`, premennú `skull_pH` opisujúcu najväčšiu výšku mozgovne lebky (v mm) a premennú `face_H` opisujúcu morfologickú výšku tváre (v mm).
+
+Na hladine významnosti $\alpha = 0.05$ zistite, či sa korelačný koeficient medzi najväčšou výškou mozgovne lebky a morfologickou výškou tváre u mužov líši od korelačného koeficientu medzi rovnakými premennými u žien.
+
+Pred testovaním overte splnenie predpokladu dvojrozmernej normality oboch náhodných výberov pomocou Mardiovho testu.
+
+Testovanie vykonajte pomocou:
+
+- a. kritického oboru,
+- b. intervalu spoľahlivosti (iba vo Waldovom prípade),
+- c. $p$-hodnoty s použitím testových štatistík:
+  1. $Z_W$,
+  2. $U_{LR}$.
+
+:::
+
+Nejprve načteme data, vybereme proměnné adekvátní největší výšce mozkovny lebky a morfologické výšce tváře a očistíme je od NA hodnot.
+
+```{r}
+#| echo: true
+#| eval: true
+
+library(MVN)
+
+data <- read.delim('one-sample-correlation-skull-mf.txt', sep = '\t', dec = '.')
+
+data_M <- data[data$sex == "m", c('skull_pH', 'face_H')]
+data_M <- na.omit(data_M)
+skull_M <- data_M$skull_pH
+face_M <- data_M$face_H
+
+data_F <- data[data$sex == "f", c('skull_pH', 'face_H')]
+data_F <- na.omit(data_F)
+skull_F <- data_F$skull_pH
+face_F <- data_F$face_H
+
+```
+
+## Test dvojrozměrné normality u mužů
+
+Mardiův test vícerozměrné normality se skládá ze dvou dílčích testů, z testu šikmosti a testu špičatosti. Hypotéza $H_0$: testovaný výběr pochází z vícerozměrného normálního rozdělení, je tedy na hladině významnosti $\alpha = 0.05$ zamítnuta tehdy, když je alespoň jedna z těchto vlastností v datech porušena. Přesněji:
+
+- $H_0$: výběr pochází z vícerozměrného normálního rozdělení
+- $H_1$: výběr nepochází z vícerozměrného normálního rozdělení
+
+Rozhodnutí o zamítnutí této základní $H_0$ se odvíjí od výsledků dvou dílčích testů.
+
+Test šikmosti:
+
+- $H_0$: data mají nulovou vícerozměrnou šikmost
+- $H_1$: data mají nenulovou šikmost, tj. jsou asymetrická, odchylují se od vícerozměrné normality
+
+Test špičatosti:
+
+- $H_0$: data mají špičatost odpovídající vícerozměrnému normálnímu rozdělení
+- $H_1$: špičatost dat se liší od vícerozměrné normální špičatosti
+
+Oba testy hodnotíme na hladině významnosti $\alpha = 0.05$.
+
+```{r}
+#| echo: true
+#| eval: true
+#| out-width: 50%
+
+mardia_M <- MVN::mvn(data_M, mvnTest = 'mardia')$multi
+p_vals_M <- as.numeric(levels(mardia_M$`p value`))
+
+tab_mardia_M <- data.frame(p_vals_M)
+rownames(tab_mardia_M) <- c("Test šikmosti", "Test špičatosti")
+names(tab_mardia_M) <- "$p$-hodnota"
+
+knitr::kable(tab_mardia_M, digits = 4, escape = FALSE)
+
+```
+
+Pro hodnoty příslušné mužům vyšla pro test šikmosti $p$-hodnota $= 0.3853$, tj. větší než $\alpha = 0.05$. Proto na této hladině významnosti nezamítáme nulovou hypotézu $H_0$, tj. šikmost tohoto výběru nevykazuje významné odchylky od předpokladů vícerozměrného normálního rozdělení.
+
+Podobný závěr můžeme udělat i pro test špičatosti dat mužů, $p$-hodnota $= 0.1998 > 0.05$, tedy na hladině významnosti $\alpha = 0.05$ nezamítáme $H_0$ o špičatosti odpovídající vícerozměrnému normálnímu rozdělení.
+
+Celkem tedy můžeme říci, že data odpovídají předpokladu vícerozměrné normality.
+
+```{r}
+#| echo: true
+#| eval: true
+#| fig-align: "center"
+#| fig-height: 7.5
+#| fig-width: 9
+#| out-width: 80%
+#| layout-ncol: 1
+
+kd <- MASS::kde2d(skull_M, face_M, n = 50, lims = c(120, 155, 90, 145))
+x <- kd$x
+y <- kd$y
+Z <- kd$z
+
+N <- dim(Z)[1]
+stredy <- Z[-1, -1] + Z[-1, -N] + Z[-N, -1] + Z[-N, -N]
+vyska <- cut(stredy, 12)
+
+paleta <- colorRampPalette(c(
+  "#3A7D66", "#4ea78e", "#66c2a4", "#9adbc3", "#cde9c5", "#e3f3c3", "#f0f6b5", "#f6f8d3"))
+
+persp(x, y, Z,  theta = -20, phi = 30, col = paleta(12)[vyska],
+      xlab = "největší výška mozkovny (v mm)", ylab = "morf. výška tváře (v mm)",
+      zlab = "rel. početnost")
+
+```
+
+
+```{r}
+#| echo: true
+#| eval: true
+#| fig-align: "center"
+
+car::dataEllipse(skull_M, face_M, level = 0.95, xlim = c(122, 150), 
+                 ylim = c(90, 141), pch = 21, bg = "#e8f7f0", col = c('#3A7D66', '#1F3B4D'),
+                 ylab = " morf. výška tváře (v mm)", xlab = "")
+mtext("největší výška mozkovny (v mm)", side = 1, line = 2)
+mtext(bquote(paste("Mardiův test: šikmost" == .(round(p_vals_M[1], 4)), ', ',
+                   "špičatost" == .(round(p_vals_M[2], 4)))), side = 1, line = 3.2)
+
+```
+
+Subjektivně hodnotit vícerozměrnou normalitu na základě vykreslených grafů je v tomto případě na první pohled náročné. 3D graf z tohoto úhlu příliš přesvědčivě nevypadá, naopak co se týče $95 \%$ elipsy spolehlivosti, dalo by se říci, že pokrývá alespoň $95 \ \%$ dat. Nicméně, na základě výsledků Mardiova testu můžeme data považovat za vícerozměrná normální.
+
+## Test dvojrozměrné normality u žen
+
+```{r}
+#| echo: true
+#| eval: true
+#| fig-align: "center"
+#| out-width: 50%
+
+mardia_F <- MVN::mvn(data_F, mvnTest = 'mardia')$multi
+p_vals_F <- as.numeric(levels(mardia_F$`p value`))
+
+tab_mardia_F <- data.frame(p_vals_F)
+rownames(tab_mardia_F) <- c("Test šikmosti", "Test špičatosti")
+names(tab_mardia_F) <- "$p$-hodnota"
+
+knitr::kable(tab_mardia_M, digits = 4, escape = FALSE)
+
+```
+
+Pro hodnoty příslušné ženám vyšla pro test šikmosti $p$-hodnota $= 0.9674$, tj. větší než $\alpha = 0.05$. Proto na této hladině významnosti nezamítáme nulovou hypotézu $H_0$, tj. šikmost tohoto výběru nevykazuje významné odchylky od předpokladů vícerozměrného normálního rozdělení.
+
+Podobný závěr můžeme udělat i pro test špičatosti dat žen, $p$-hodnota $= 0.6223 > 0.05$, tedy na hladině významnosti $\alpha = 0.05$ nezamítáme $H_0$ o špičatosti odpovídající vícerozměrnému normálnímu rozdělení.
+
+Celkem tedy můžeme říci, že i tento výběr odpovídá předpokladu vícerozměrné normality.
+
+```{r}
+#| echo: true
+#| eval: true
+#| fig-align: "center"
+#| fig-height: 6.5
+#| fig-width: 8
+#| out-width: 100%
+#| layout-ncol: 1
+
+kd <- MASS::kde2d(skull_F, face_F, n = 50, lims = c(115, 145, 80, 130))
+x <- kd$x
+y <- kd$y
+Z <- kd$z
+
+N <- dim(Z)[1]
+stredy <- Z[-1, -1] + Z[-1, -N] + Z[-N, -1] + Z[-N, -N]
+vyska <- cut(stredy, 12)
+
+persp(x, y, Z,
+      theta = -20, phi = 30,
+      col = paleta(12)[vyska],
+      xlab = "největší výška mozkovny (v mm)",
+      ylab = "morf. výška tváře (v mm)",
+      zlab = "rel. početnost")
+
+```
+
+
+```{r}
+#| echo: true
+#| eval: true
+#| fig-align: "center"
+
+
+car::dataEllipse(skull_F, face_F, level = 0.95, xlim = c(115, 145), 
+                 ylim = c(80, 130), pch = 21, bg = "#e8f7f0", col = c('#3A7D66', '#1F3B4D'),
+                 ylab = " morf. výška tváře (v mm)", xlab = "")
+mtext("největší výška mozkovny (v mm)", side = 1, line = 2)
+mtext(bquote(paste("Mardiův test: šikmost" == .(round(p_vals_F[1], 4)), ', ',
+                   "špičatost" == .(round(p_vals_F[2], 4)))), side = 1, line = 3.2)
+
+```
+
+3D graf pro ženy na první pohled naznačuje, že by data měla pocházet z vícerozměrného normálního rozdělení. Také $95 \%$ elipsa spolehlivosti pokrývá alespoň $95 \ \%$ dat. Také na základě výsledků Mardiova testu můžeme data považovat za vícerozměrná normální.
+
+## Test o rozdílu korelačních koeficientů $(\rho_1 - \rho_2)$
+
+```{r}
+#| echo: true
+#| eval: true
+
+rho0 <- 0
+alpha <- 0.05
+ksi0 <- (1/2) * log((1 + rho0)/(1 - rho0))
+
+n_M <- length(skull_M)
+n_F <- length(skull_F)
+
+r_M <- cor(skull_M, face_M)
+r_F <- cor(skull_F, face_F)
+
+z_M <- (1/2) * log((1 + r_M)/(1 - r_M))
+z_F <- (1/2) * log((1 + r_F)/(1 - r_F))
+
+
+# testovani pomoci kritickeho oboru
+
+zW <- ((z_M - z_F) - ksi0) / (sqrt((1/(n_M - 3)) + (1/(n_F - 3))))
+q1 <- qnorm(alpha / 2, 0, 1)
+q2 <- qnorm(1 - alpha/2, 0, 1)
+
+rho_hat <- function(r, r_M, r_F, n_M, n_F) {
+n_M * (r_M - r)/(1 - r_M * r) +  n_F * (r_F - r)/(1 - r_F * r) 
+}
+r <- uniroot(rho_hat, interval = c(-1, 1), r_M = r_M, r_F = r_F, n_M = n_M, n_F = n_F)$root
+uLR <- n_M * log((1 - r_M * r)^2 / ((1 - r^2) * (1 - r_M^2))) +  n_F * log((1 - r_F * r)^2 / ((1 - r^2) * (1 - r_F^2)))
+q <- qchisq(1 - alpha, 1)
+
+
+# testovani pomoci intervalu spolehlivosti 
+
+sigma2 <- 1/(n_M - 3) + 1/(n_F - 3)
+dh_zR <- (z_M - z_F) - (q2 * sqrt(sigma2)) 
+hh_zR <- (z_M - z_F) + (q2 * sqrt(sigma2)) 
+dh_R <- tanh(dh_zR)
+hh_R <- tanh(hh_zR)
+
+
+# testovani pomoci p-hodnoty
+
+p_ZW <- 2 * min(pnorm(zW), 1 - pnorm(zW))
+p_uLR <- 1 - pchisq(uLR, 1)
+
+
+# tabulka s vysledky
+
+tab <- data.frame(
+  rho = c(r_M - r_F, r_M - r_F),
+  statistika = c(zW, uLR),
+  Whh = c(q1, NA),
+  Wdh = c(q2, q),
+  IS.dh = c(dh_R, NA),
+  IS.hh = c(hh_R, NA),
+  p_hodnota = c(p_ZW, p_uLR))
+names(tab) <- c("odhad rozdílu", "statistika", "$W_{hh}$", "$W_{dh}$", 
+                "$IS_{dh}$", "$IS_{hh}$", "$p$-hodnota")
+rownames(tab) <- c("Waldův přístup", "Věrohodnostní přístup")
+
+tab <- round(tab, digits = 4)
+
+knitr::kable(tab, digits = 3, escape = FALSE)
+
+```
+
+## Grafická vizualizace
+
+```{r}
+#| echo: true
+#| eval: true
+#| fig-align: "center"
+
+col_M <- '#3A7D66'
+bg_M <-'#66c2a4'
+col_F <- '#c0bd4d'
+bg_F <- "#eceeaa"
+
+plot(skull_M, face_M, xlab = "", ylab = "", type = "p", pch = 21, bg = bg_M, col = col_M, ylim = c(min(face_F) - 5, max(face_M) + 5), xlim = c(min(skull_F) - 1, max(skull_M) + 1))
+points(skull_F, face_F, bg = bg_F, col = col_F, pch = 21)
+abline(lm(face_M ~ skull_M), col = col_M, lwd = 3, lty = 2)
+abline(lm(face_F ~ skull_F), col = col_F, lwd = 3, lty = 2)
+legend("topleft", legend = c("muži", "ženy"), pch = 19, lty = 1, col = c(col_M, col_F), lwd = 2)
+mtext("největší výška mozkovny (v mm)", side = 1, line = 3)
+mtext(expression(rho), side = 1, line = 2)
+
+mtext(bquote(paste(rho[M] == .(round(r_M, 4)), ', ',
+                   rho["F"] == .(round(r_F, 4)))), side = 1, line = 4)
+mtext("morfologická výška tváře (v mm)", side = 2, line = 2.5)
+
+```
